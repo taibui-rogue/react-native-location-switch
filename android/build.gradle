@@ -7,6 +7,10 @@ def computeVersionName() {
     return json.version
 }
 
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
+}
+
 buildscript {
     repositories {
         google()
@@ -21,12 +25,12 @@ buildscript {
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion safeExtGet("compileSdkVersion", 28)
+    buildToolsVersion safeExtGet("buildToolsVersion", '28.0.3')
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 27
+        minSdkVersion safeExtGet('minSdkVersion', 16)
+        targetSdkVersion safeExtGet('targetSdkVersion', 28)
         versionCode 1
         versionName computeVersionName()
     }
@@ -43,5 +47,5 @@ repositories {
 
 dependencies {
     implementation 'com.facebook.react:react-native:+'
-    implementation 'com.google.android.gms:play-services-location:15.0.1'
+    implementation "com.google.android.gms:play-services-location:${safeExtGet('googlePlayServicesVersion', '15.0.1')}"
 }
